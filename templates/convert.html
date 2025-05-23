@@ -1,0 +1,104 @@
+{% include "header.html" %}
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title" data-aos="fade">
+      <div class="heading">
+        <div class="container">
+          <div class="row d-flex justify-content-center text-center">
+            <div class="col-lg-8">
+              <h1>Convert</h1>
+              <p class="mb-0">Open your image and get a list of primary colors.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="breadcrumbs">
+        <div class="container">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">Convert</li>
+          </ol>
+        </div>
+      </nav>
+    </div><!-- End Page Title -->
+
+<!-- Events Section -->
+<section id="events" class="events section">
+  <div class="container" data-aos="fade-up">
+    <div class="row">
+      <div class="col-12 d-flex align-items-stretch">
+        {% if not image_is_open %}
+          <div class="container">
+            <div class="d-flex justify-content-center">
+              <div class="card p-4 my-5 shadow-sm" style="width: 400px;">
+                <h4 class="text-center mb-4">Upload Image</h4>
+                <form method="post" action="/convert" enctype="multipart/form-data">
+                  <div class="mb-3 text-center">
+                    <label for="fileInput" class="btn btn-secondary">Choose File</label>
+                    <input type="file" name="image_file" id="fileInput" hidden>
+                    <p id="fileName" class="mt-2 text-muted"></p>
+                    <div id="fileAlert" class="alert alert-danger mt-2 d-none" role="alert">
+                      Please upload an image file (jpg, jpeg, png, bmp).
+                    </div>
+                  </div>
+                  <div class="mb-3 text-center">
+                    <label for="colorSelect">Chose number of colors:</label>
+                        <select id="colorSelect" name="color">
+                          {% for value in number_of_colors %}
+                            <option value="{{ value}}">{{ value }}</option>
+                          {% endfor %}
+                        </select>
+                  </div>
+                  <div class="text-center">
+                    <button type="submit" name="submit_button"  class="btn btn-primary">Upload</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        {% else %}
+        <div class="card w-100">
+          <div class="card-img">
+            <img src="{{ url_for('static', filename=image) }}" alt="..." class="mx-auto d-block">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title"><a href="">Most common colors</a></h5>
+            <p class="fst-italic text-center">By the way, you can copy HEX code by click on him.</p>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Color</th>
+                  <th scope="col">HEX code</th>
+                  <th scope="col">Count</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for key, value in data.items() %}
+                <tr>
+                  <th scope="row">{{ loop.index }}</th>
+                  <td>
+                    <div class="color-box" style="background-color: {{ key }};"></div>
+                  </td>
+                  <td>
+                    <p id="textToCopy" onclick="copyText()" style="cursor:pointer; user-select:none;">{{ key }}</p>
+                    <div id="toast"></div>
+                  </td>
+                  <td>{{ value }}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section><!-- /Events Section -->
+
+  </main>
+
+{% include "footer.html" %}
